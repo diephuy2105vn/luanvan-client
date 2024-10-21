@@ -1,3 +1,7 @@
 {
-  "extends": "next/core-web-vitals"
+	"extends": "next/core-web-vitals",
+	"rules": {
+		//Tắt cảnh báo display name
+		"react/display-name": "off"
+	}
 }
