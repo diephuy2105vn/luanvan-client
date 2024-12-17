@@ -7,6 +7,8 @@ import { MenuItemProps } from "@/components/common/Menu";
 import CustomModal from "@/components/common/Modal";
 import CustomSearch from "@/components/common/Search";
 import UserPermissionTable from "@/components/table/UserPermissionTable";
+import { RootState } from "@/config/redux/store";
+import { getUserPack } from "@/config/redux/userReducer";
 import AlertContext from "@/contexts/AlertContext";
 import useSetValueTimeout from "@/hooks/useSetValueTimeOut";
 import {
@@ -46,6 +48,7 @@ import {
 } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 const Page = () => {
   const { showAlert } = useContext(AlertContext);
 
@@ -84,17 +87,17 @@ const Page = () => {
 
   const menuItems: (item: UserPermission) => MenuItemProps[] = useCallback(
     (item: UserPermission) => [
+      // {
+      //   key: "1",
+      //   label: "Thay đổi quyền",
+      //   action: (metaData) => {
+      //     handleToggleModalUpdateUser(metaData);
+      //   },
+      //   icon: AdminPanelSettingsOutlined,
+      //   disabled: item?.user?._id === bot?.owner,
+      // },
       {
         key: "1",
-        label: "Thay đổi quyền",
-        action: (metaData) => {
-          handleToggleModalUpdateUser(metaData);
-        },
-        icon: AdminPanelSettingsOutlined,
-        disabled: item?.user?._id === bot?.owner,
-      },
-      {
-        key: "2",
         label: "Xóa",
         action: (metaData) => {
           setDeletingUser(metaData);
@@ -114,7 +117,7 @@ const Page = () => {
 
   const fetchUserPermissions = async () => {
     const res = await botApi.getListUserByBotId(botId as string, {
-      name: changedSearchValue.trim(),
+      username: changedSearchValue.trim(),
     });
     setUserPermissions(res as UserPermission[]);
   };
@@ -419,7 +422,7 @@ const Page = () => {
                 ))}
             </Popper>
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}> 
             <FormControl fullWidth>
               <InputLabel>Quyền</InputLabel>
               <Select
@@ -442,7 +445,7 @@ const Page = () => {
                   </Box>
                 )}
               >
-                <MenuItem
+                 <MenuItem
                   onClick={() => {
                     setSelectedPermissions((prev) => {
                       if (prev.includes(PermissionEnum.WRITE_FILE)) {
@@ -478,7 +481,7 @@ const Page = () => {
                     />
                   </ListItemIcon>
                   {getPermissionLabel(PermissionEnum.READ_FILE)}
-                </MenuItem>
+                </MenuItem> 
                 <MenuItem
                   onClick={() => {
                     setSelectedPermissions((prev) => {
@@ -516,7 +519,7 @@ const Page = () => {
                       )}
                     />
                   </ListItemIcon>
-                  {getPermissionLabel(PermissionEnum.WRITE_FILE)}
+                      Quản trị dữ liệu
                 </MenuItem>
                 <MenuItem
                   onClick={() => {
@@ -597,7 +600,7 @@ const Page = () => {
                 </MenuItem>
               </Select>
             </FormControl>
-          </Grid>
+          </Grid> */}
         </Grid>
         <Box
           sx={{

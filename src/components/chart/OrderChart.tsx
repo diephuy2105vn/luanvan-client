@@ -1,21 +1,19 @@
-import { ChatMessage } from "@/types/chat_message";
 import { Box } from "@mui/material";
 import { ApexOptions } from "apexcharts";
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
+
+type Order = {
+  id: string;
+  order_date: string;
+};
 
 type SeriesData = {
   name: string;
   data: number[];
 };
 
-const MessageChart = ({
-  messages,
-  timeFrame,
-}: {
-  messages: ChatMessage[];
-  timeFrame?: "week" | "month";
-}) => {
+const OrderChart = ({ orders }: { orders: Order[] }) => {
   const [seriesData, setSeriesData] = useState<SeriesData[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
 
@@ -26,13 +24,13 @@ const MessageChart = ({
     return Array.from({ length: days }, (_, i) => (i + 1).toString());
   };
 
-  const groupMessagesByDayOfMonth = (
-    messages: ChatMessage[],
+  const groupOrdersByDayOfMonth = (
+    orders: Order[],
     daysInMonth: string[]
   ): Record<string, number> => {
-    const groupedMessages = messages.reduce(
-      (acc: Record<string, number>, message: ChatMessage) => {
-        const createdAt = new Date(message.created_at as string);
+    const groupedOrders = orders.reduce(
+      (acc: Record<string, number>, order: Order) => {
+        const createdAt = new Date(order.order_date as string);
         const day = createdAt.getDate().toString();
 
         if (!acc[day]) {
@@ -45,8 +43,9 @@ const MessageChart = ({
       {}
     );
 
+    // Ensure all days of the month are accounted for, even if they have 0 orders
     const completeData = daysInMonth.reduce((acc, day) => {
-      acc[day] = groupedMessages[day] || 0;
+      acc[day] = groupedOrders[day] || 0;
       return acc;
     }, {} as Record<string, number>);
 
@@ -56,27 +55,27 @@ const MessageChart = ({
   useEffect(() => {
     const today = new Date();
     const daysInMonth = getDaysInMonth(today);
-    const groupedData = groupMessagesByDayOfMonth(messages, daysInMonth);
+    const groupedData = groupOrdersByDayOfMonth(orders, daysInMonth);
     const sortedData = daysInMonth.map((day) => groupedData[day]);
 
     setCategories(daysInMonth);
-    setSeriesData([{ name: "Messages", data: sortedData }]);
-  }, [messages]);
+    setSeriesData([{ name: "Orders", data: sortedData }]);
+  }, [orders]);
 
   const chartOptions: ApexOptions = {
     chart: {
-      id: "messages-chart",
+      id: "orders-chart",
       type: "bar",
     },
     xaxis: {
       categories: categories, // Các ngày trong tháng
       title: {
-        text: "Ngày trong tháng",
+        text: "Ngày",
       },
     },
     yaxis: {
       title: {
-        text: "Số tin nhắn",
+        text: "Số lương đăng ký",
       },
     },
   };
@@ -88,4 +87,4 @@ const MessageChart = ({
   );
 };
 
-export default MessageChart;
+export default OrderChart;

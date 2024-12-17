@@ -147,7 +147,7 @@ const Banner = () => {
         <Grid container spacing={2}>
           {bots?.map((bot) => (
             <Grid item xs={6} key={bot._id}>
-              <Link href={`/chat/${bot._id}`}>
+              <Link href={`/management/${bot._id}`}>
                 <BotCard bot={bot} />
               </Link>
             </Grid>

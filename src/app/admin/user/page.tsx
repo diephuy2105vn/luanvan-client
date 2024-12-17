@@ -1,7 +1,7 @@
 "use client";
 
 import FormUser from "@/components/form/FormUser";
-import { getUser, getUserPack, setUser } from "@/config/redux/userReducer";
+import { getUser } from "@/config/redux/userReducer";
 import useBreakpoint from "@/hooks/useBreakpoins";
 import { OnlyChildrenProps } from "@/types/common";
 import { defaultUser, UserBase } from "@/types/user";
@@ -11,16 +11,15 @@ import { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AlertContext from "@/contexts/AlertContext";
 import userApi from "@/api/userApi";
-import { useDispatch } from "react-redux";
 
 const Layout = ({ children }: OnlyChildrenProps) => {
   const breakpoint = useBreakpoint();
   const { showAlert } = useContext(AlertContext);
   const logedUser = useSelector((state: RootState) => getUser(state));
 
-  const [user, setUserState] = useState<UserBase | null>(defaultUser);
+  const [user, setUser] = useState<UserBase | null>(defaultUser);
   const [isDisabledField, setIsDisabledField] = useState(true);
-  const dispatch = useDispatch();
+
   const handleUpdateUser = async () => {
     if (!user) {
       return;
@@ -43,7 +42,7 @@ const Layout = ({ children }: OnlyChildrenProps) => {
         formData.append("avatar", user.avatar);
         const res = await userApi.uploadAvatar(formData);
 
-        setUserState(
+        setUser(
           (pre) =>
             pre && {
               ...pre,
@@ -51,17 +50,15 @@ const Layout = ({ children }: OnlyChildrenProps) => {
             }
         );
       }
-      setUserState(
+      setUser(
         (pre) =>
           pre && {
             ...pre,
             full_name: res.full_name,
             phone_number: res.phone_number,
-            email: res.email,
           }
       );
-      dispatch(setUser(res as UserBase));
-      showAlert("Cập nhật người dùng thành công", "success");
+      showAlert("Cập nhật trợ lý AI thành công", "success");
       toggleDisabledField();
     } catch (error) {
       showAlert("Đã có lỗi xảy ra", "error");
@@ -73,7 +70,7 @@ const Layout = ({ children }: OnlyChildrenProps) => {
   };
 
   useEffect(() => {
-    setUserState(logedUser);
+    setUser(logedUser);
   }, [logedUser]);
 
   return (
@@ -103,11 +100,7 @@ const Layout = ({ children }: OnlyChildrenProps) => {
           },
         })}
       >
-        <FormUser
-          user={user}
-          setUser={setUserState}
-          disabled={isDisabledField}
-        />
+        <FormUser user={user} setUser={setUser} disabled={isDisabledField} />
         <Box
           sx={{
             display: "flex",

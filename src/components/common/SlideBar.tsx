@@ -1,5 +1,6 @@
 "use client";
 import {
+  AdminPanelSettings,
   ChevronLeft,
   ChevronRight,
   Mail,
@@ -8,6 +9,7 @@ import {
   MoveToInbox,
   NotificationImportant,
   Notifications,
+  ShoppingCart,
   SmartToy,
   ToysOutlined,
   Widgets,
@@ -50,9 +52,10 @@ import NotificationContext from "@/contexts/NotificationContext";
 import { NotificationBase } from "@/types/notification";
 import botApi from "@/api/botApi";
 import notificationApi from "@/api/notificationApi";
-import { useAppDispatch } from "@/hooks/common";
-import { setUser } from "@/config/redux/userReducer";
+import { useAppDispatch, useAppSelector } from "@/hooks/common";
+import { getUser, setUser } from "@/config/redux/userReducer";
 import { deleteCookie } from "@/utils/cookie";
+import { useSelector } from "react-redux";
 const drawerWidth = 240;
 const drawerHeaderHeight = 80;
 
@@ -156,6 +159,7 @@ const Sidebar = ({ open, setOpen, handleOpen, handleClose }: SidebarProps) => {
     NotificationBase[]
   >([]);
   const router = useRouter();
+  const logedUser = useAppSelector((state) => getUser(state));
   const handleReadNotification = async (notification: NotificationBase) => {
     if (!notification || !notification._id) {
       return;
@@ -233,63 +237,70 @@ const Sidebar = ({ open, setOpen, handleOpen, handleClose }: SidebarProps) => {
               icon: <DataUsageIcon />,
             },
             {
-              text: "Dịch vụ",
+              text: "Gói dịch vụ",
               href: "/pack",
-              icon: <ChatIcon />,
+              icon: <ShoppingCart />,
             },
-          ].map((item) => {
-            return (
-              <ListItem
-                key={item.text}
-                disablePadding
-                sx={(theme) => ({
-                  display: "block",
-                  color:
-                    pathname == "" ||
-                    pathname == item.href ||
-                    (item.href !== "/" && pathname.includes(item.href))
-                      ? theme.palette.primary.main
-                      : theme.palette.secondary.main,
-                })}
-                component={Link}
-                href={item.href}
-              >
-                <ListItemButton
-                  sx={{
-                    minHeight: 48,
-                    justifyContent: open ? "initial" : "center",
-                    px: 2.5,
-                  }}
+            logedUser?.role === "admin" && {
+              text: "Admin",
+              href: "/admin/chart",
+              icon: <AdminPanelSettings />,
+            },
+          ]
+            .filter((item) => item)
+            .map((item) => {
+              return (
+                <ListItem
+                  key={item.text}
+                  disablePadding
+                  sx={(theme) => ({
+                    display: "block",
+                    color:
+                      pathname == "" ||
+                      pathname == item.href ||
+                      (item.href !== "/" && pathname.includes(item.href))
+                        ? theme.palette.primary.main
+                        : theme.palette.secondary.main,
+                  })}
+                  component={Link}
+                  href={item.href}
                 >
-                  <ListItemIcon
-                    sx={(theme) => ({
-                      minWidth: 0,
-                      mr: open ? 3 : "auto",
-                      justifyContent: "center",
-                      color:
-                        pathname == "" ||
-                        pathname == item.href ||
-                        (item.href !== "/" && pathname.includes(item.href))
-                          ? theme.palette.primary.main
-                          : theme.palette.secondary.main,
-                    })}
-                  >
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText
+                  <ListItemButton
                     sx={{
-                      opacity: open ? 1 : 0,
-                      fontWeight: "bold",
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
                     }}
                   >
-                    <Typography sx={{ fontWeight: "500" }}>
-                      {item.text}
-                    </Typography>
-                  </ListItemText>
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
+                    <ListItemIcon
+                      sx={(theme) => ({
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                        color:
+                          pathname == "" ||
+                          pathname == item.href ||
+                          (item.href !== "/" && pathname.includes(item.href))
+                            ? theme.palette.primary.main
+                            : theme.palette.secondary.main,
+                      })}
+                    >
+                      {item.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      sx={{
+                        opacity: open ? 1 : 0,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: "500" }}>
+                        {item.text}
+                      </Typography>
+                    </ListItemText>
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
         </List>
         <Divider />
         <List>

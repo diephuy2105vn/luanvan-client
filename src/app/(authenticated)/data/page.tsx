@@ -10,6 +10,7 @@ import CustomModal from "@/components/common/Modal";
 import CustomSearch from "@/components/common/Search";
 import FileTable from "@/components/table/FileTable";
 import UploadFile from "@/components/upload/UploadFile";
+import { RootState } from "@/config/redux/store";
 import { getUserPack } from "@/config/redux/userReducer";
 import AlertContext from "@/contexts/AlertContext";
 import SocketContext from "@/contexts/SocketContext";
@@ -27,6 +28,7 @@ import {
 import { Box, Button, Grid, Modal, Typography } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const SIZE_PAGE = 6;
 
@@ -50,11 +52,8 @@ const Page = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const changedSearchValue = useSetValueTimeout(searchValue, 1000);
-  const [packageInfo, setPackageInfo] = useState<PackageType>();
-  const fetchPackages = async () => {
-    const res = await userApi.getPackageInfo();
-    setPackageInfo(res.data);
-  };
+  const userPack = useSelector((state: RootState) => getUserPack(state));
+
   const handleToggleModal = () => {
     setOpenModal((pre) => !pre);
     isUploadError && setIsUploadError(false);
@@ -70,7 +69,13 @@ const Page = () => {
       const totalSize = uploadingFiles.reduce((accumulator, file) => {
         return file.size ? file.size + accumulator : accumulator;
       }, 0);
-
+      if (
+        userPack?.pack?.capacity_file &&
+        totalSize + fileCapacity > userPack?.pack?.capacity_file
+      ) {
+        showAlert("Dung lượng không đủ", "warning");
+        return;
+      }
       const formData = new FormData();
       uploadingFiles.forEach((file) => {
         formData.append("files", file);
@@ -89,6 +94,34 @@ const Page = () => {
       return;
     }
     setIsUploadError(true);
+  };
+
+  const handleDownload = async (file: FileBase) => {
+    try {
+      const res = await fileApi.download(file._id as string);
+      const fileURL = URL.createObjectURL(
+        new Blob([res as any], {
+          type:
+            file.extension === "docx"
+              ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              : file.extension === "doc"
+              ? "application/msword"
+              : "application/pdf",
+        })
+      );
+
+      const link = document.createElement("a");
+      link.href = fileURL;
+      link.setAttribute("download", file.name);
+
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+      window.URL.revokeObjectURL(fileURL);
+    } catch (error) {
+      console.log(error);
+      showAlert("Đã có lỗi xảy ra", "error");
+    }
   };
 
   const handleToggleModalDeleteFile = (file?: FileBase) => {
@@ -138,7 +171,6 @@ const Page = () => {
 
   useEffect(() => {
     fetchFiles();
-    // fetchPackages();
   }, [currentPage, changedSearchValue]);
 
   useEffect(() => {
@@ -150,7 +182,7 @@ const Page = () => {
       key: "1",
       label: "Download",
       action: (metaData: FileBase) => {
-        console.log("Meta data:", metaData);
+        handleDownload(metaData);
       },
       icon: Download,
     },
@@ -189,27 +221,6 @@ const Page = () => {
               onChange={(e) => setSearchValue(e.target.value)}
               size="small"
             />
-            {/* <Filter
-							label="Sắp xếp"
-							filter={filter}
-							setFilter={setFilter}
-							items={[
-								{
-									key: "1",
-									name: "sort",
-									label: "Ngày tạo",
-									value: "ASC",
-									icon: ArrowUpward,
-								},
-								{
-									key: "2",
-									name: "sort",
-									label: "Ngày tạo",
-									value: "DESC",
-									icon: ArrowDownward,
-								},
-							]}
-						/> */}
           </Box>
         </Grid>
         <Grid>
@@ -217,7 +228,9 @@ const Page = () => {
             onClick={() => handleToggleModal()}
             startIcon={<FileUploadOutlined />}
             variant="outlined"
-            // disabled={!packageInfo || fileCapacity < packageInfo.capacity_file}
+            disabled={
+              !userPack?.pack || fileCapacity > userPack?.pack.capacity_file
+            }
           >
             Thêm Dữ Liệu
           </Button>

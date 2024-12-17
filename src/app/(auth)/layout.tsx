@@ -6,17 +6,19 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function RootLayout({
-	children,
+  children,
 }: Readonly<{
-	children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-	const router = useRouter();
-	const logedUser = useAppSelector((state) => getUser(state));
+  const router = useRouter();
+  const logedUser = useAppSelector((state) => getUser(state));
 
-	useEffect(() => {
-		if (logedUser?._id) {
-			router.push("/");
-		}
-	}, [logedUser?._id]);
-	return <div>{children}</div>;
+  useEffect(() => {
+    if (logedUser?._id) {
+      logedUser.role === "admin"
+        ? router.push("/admin/chart")
+        : router.push("/");
+    }
+  }, [logedUser?._id]);
+  return <div>{children}</div>;
 }

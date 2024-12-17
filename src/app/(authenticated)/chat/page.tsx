@@ -32,12 +32,12 @@ const Page = () => {
       <Box
         sx={{
           display: "flex",
-          height: breakpoint.sm
+          height: breakpoint.md
             ? "100vh"
             : `calc(100vh - ${HEADER_HEIGHT_SM}px)`,
         }}
       >
-        {breakpoint.sm && (
+        {breakpoint.md && (
           <Box
             sx={{
               display: "flex",
@@ -57,8 +57,8 @@ const Page = () => {
           {selectedBot ? (
             <ChatBotFrame
               bot={selectedBot}
-              openDrawer={!breakpoint.sm ? openDrawer : null}
-              setOpenDrawer={!breakpoint.sm ? setOpenDrawer : null}
+              openDrawer={!breakpoint.md ? openDrawer : null}
+              setOpenDrawer={!breakpoint.md ? setOpenDrawer : null}
               showChatHistory={true}
             />
           ) : (
@@ -81,7 +81,7 @@ const Page = () => {
               >
                 * Vui lòng chọn trợ lý AI
               </Typography>
-              {!breakpoint.sm && (
+              {!breakpoint.md && (
                 <Button
                   variant="contained"
                   onClick={() => {
@@ -94,7 +94,7 @@ const Page = () => {
             </Box>
           )}
         </Box>
-        {!breakpoint.sm && (
+        {!breakpoint.md && (
           <Drawer
             open={openDrawer}
             onClose={() => {

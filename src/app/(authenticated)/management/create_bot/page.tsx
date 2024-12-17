@@ -25,7 +25,7 @@ const Page = () => {
     const formData = new FormData();
     formData.append("name", creatingBot.name);
     formData.append("description", creatingBot.description);
-    formData.append("response_model", String(creatingBot.response_model));
+    formData.append("response_model", "gpt-3.5-turbo");
 
     if (creatingBot.avatar) {
       formData.append("avatar", creatingBot.avatar);

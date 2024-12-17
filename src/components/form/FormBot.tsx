@@ -1,20 +1,20 @@
 import { BotBase, BotCreate, isBotBase } from "@/types/bot";
 import {
-	Box,
-	Button,
-	Checkbox,
-	FormControl,
-	FormGroup,
-	FormHelperText,
-	Grid,
-	Input,
-	InputLabel,
-	OutlinedInput,
-	styled,
-	SvgIcon,
-	TextField,
-	ToggleButton,
-	Typography,
+  Box,
+  Button,
+  Checkbox,
+  FormControl,
+  FormGroup,
+  FormHelperText,
+  Grid,
+  Input,
+  InputLabel,
+  OutlinedInput,
+  styled,
+  SvgIcon,
+  TextField,
+  ToggleButton,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import UploadAvatar from "../upload/UploadAvatar";
@@ -25,138 +25,137 @@ import { preconnect } from "react-dom";
 import botApi from "@/api/botApi";
 
 const StyledForm = styled("form")(({ theme }) => ({
-	width: "100%",
-	height: "100%",
+  width: "100%",
+  height: "100%",
 }));
 
 const FormBot = ({
-	bot,
-	setBot,
-	disabled = false,
-	onSubmit,
+  bot,
+  setBot,
+  disabled = false,
+  onSubmit,
 }: {
-	bot: BotBase | BotCreate;
-	setBot: React.Dispatch<React.SetStateAction<BotBase | BotCreate>>;
-	onSubmit: React.FormEventHandler<HTMLFormElement>;
-	disabled?: boolean;
+  bot: BotBase | BotCreate;
+  setBot: React.Dispatch<React.SetStateAction<BotBase | BotCreate>>;
+  onSubmit: React.FormEventHandler<HTMLFormElement>;
+  disabled?: boolean;
 }) => {
-	const breakpoint = useBreakpoint();
-	const [avatar, setAvatar] = useState<string | ArrayBuffer | null>(null);
+  const breakpoint = useBreakpoint();
+  const [avatar, setAvatar] = useState<string | ArrayBuffer | null>(null);
 
-	const fetchAvatar = async () => {
-		const timestamp = new Date().getTime();
-		const res = await botApi.getAvatar(bot._id as string, timestamp);
-		const reader = new FileReader();
-		reader.onloadend = () => {
-			const base64data = reader.result;
-			setAvatar(base64data);
-		};
-		reader.readAsDataURL(res as Blob);
-		return;
-	};
+  const fetchAvatar = async () => {
+    const timestamp = new Date().getTime();
+    const res = await botApi.getAvatar(bot._id as string, timestamp);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64data = reader.result;
+      setAvatar(base64data);
+    };
+    reader.readAsDataURL(res as Blob);
+    return;
+  };
 
-	useEffect(() => {
-		if (bot?.avatar_source) {
-			fetchAvatar();
-		}
-	}, [bot.avatar_source]);
+  useEffect(() => {
+    if (bot?.avatar_source) {
+      fetchAvatar();
+    }
+  }, [bot.avatar_source]);
 
-	return (
-		<StyledForm
-			onSubmit={(e) => {
-				e.preventDefault();
-				onSubmit(e);
-			}}>
-			<Grid container spacing={{ xs: 2, md: 4 }}>
-				<Grid
-					item
-					xs={12}
-					md={4}
-					spacing={{ xs: 2, md: 4 }}
-					sx={{
-						display: "flex",
-						justifyContent: "center",
-						alignItems: "center",
-					}}>
-					<Box
-						sx={{
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							flexDirection: "column",
-							gap: "16px",
-							margin: "auto",
-						}}>
-						<UploadAvatar
-							value={bot?.avatar}
-							src={avatar ? (avatar as string) : ""}
-							onChange={(file) =>
-								setBot((pre) => ({ ...pre, avatar: file }))
-							}
-							disabled={disabled}
-							size={
-								!breakpoint.sm
-									? "small"
-									: !breakpoint.md
-									? "medium"
-									: "large"
-							}
-							alt={bot?.name || ""}
-						/>
-					</Box>
-				</Grid>
-				<Grid item xs={12} md={8}>
-					<Box
-						sx={{
-							display: "flex",
-							justifyContent: "center",
-							flexDirection: "column",
-							gap: {
-								xs: "8px",
-								md: "16px",
-							},
-						}}>
-						<Typography
-							sx={{
-								fontWeight: "500",
-								fontSize: "2rem",
-								marginBottom: "4px",
-							}}>
-							Thông tin trợ lý AI
-						</Typography>
-						<TextField
-							label="Tên trợ lý AI *"
-							fullWidth
-							placeholder="Vui lòng nhập tên trợ lý AI"
-							value={bot?.name}
-							onChange={(e) => {
-								console.log(e);
-								setBot((pre) => ({
-									...pre,
-									name: e.target.value,
-								}));
-							}}
-							disabled={disabled}
-							required
-						/>
-						<TextField
-							label="Mô tả về trợ lý AI"
-							fullWidth
-							multiline={true}
-							rows={3}
-							placeholder="* Ví dụ: Tôi là trợ lý AI tôi sẽ giúp bạn giải quyết vấn đề về ... "
-							value={bot?.description}
-							onChange={(e) => {
-								console.log(e);
-								setBot((pre) => ({
-									...pre,
-									description: e.target.value,
-								}));
-							}}
-							disabled={disabled}
-							required
-						/>
-						<Box
+  return (
+    <StyledForm
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSubmit(e);
+      }}
+    >
+      <Grid container spacing={{ xs: 2, md: 4 }}>
+        <Grid
+          item
+          xs={12}
+          md={4}
+          spacing={{ xs: 2, md: 4 }}
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: "16px",
+              margin: "auto",
+            }}
+          >
+            <UploadAvatar
+              value={bot?.avatar}
+              src={avatar ? (avatar as string) : ""}
+              onChange={(file) => setBot((pre) => ({ ...pre, avatar: file }))}
+              disabled={disabled}
+              size={
+                !breakpoint.sm ? "small" : !breakpoint.md ? "medium" : "large"
+              }
+              alt={bot?.name || ""}
+            />
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+              gap: {
+                xs: "8px",
+                md: "16px",
+              },
+            }}
+          >
+            <Typography
+              sx={{
+                fontWeight: "500",
+                fontSize: "2rem",
+                marginBottom: "4px",
+              }}
+            >
+              Thông tin trợ lý AI
+            </Typography>
+            <TextField
+              label="Tên trợ lý AI *"
+              fullWidth
+              placeholder="Vui lòng nhập tên trợ lý AI"
+              value={bot?.name}
+              onChange={(e) => {
+                console.log(e);
+                setBot((pre) => ({
+                  ...pre,
+                  name: e.target.value,
+                }));
+              }}
+              disabled={disabled}
+              required
+            />
+            <TextField
+              label="Mô tả về trợ lý AI"
+              fullWidth
+              multiline={true}
+              rows={3}
+              placeholder="* Ví dụ: Tôi là trợ lý AI tôi sẽ giúp bạn giải quyết vấn đề về ... "
+              value={bot?.description}
+              onChange={(e) => {
+                console.log(e);
+                setBot((pre) => ({
+                  ...pre,
+                  description: e.target.value,
+                }));
+              }}
+              disabled={disabled}
+              required
+            />
+            {/* <Box
 							sx={{ display: "flex", width: "100%", gap: "8px" }}>
 							{[
 								{
@@ -217,12 +216,12 @@ const FormBot = ({
 									disabled={disabled}
 								/>
 							))}
-						</Box>
-					</Box>
-				</Grid>
-			</Grid>
-		</StyledForm>
-	);
+						</Box> */}
+          </Box>
+        </Grid>
+      </Grid>
+    </StyledForm>
+  );
 };
 
 export default FormBot;

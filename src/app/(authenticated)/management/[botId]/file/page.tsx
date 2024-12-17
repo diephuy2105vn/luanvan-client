@@ -8,6 +8,7 @@ import CustomModal from "@/components/common/Modal";
 import CustomSearch from "@/components/common/Search";
 import FileTable from "@/components/table/FileTable";
 import UploadFile from "@/components/upload/UploadFile";
+import { RootState } from "@/config/redux/store";
 import { getUserPack } from "@/config/redux/userReducer";
 import AlertContext from "@/contexts/AlertContext";
 import SocketContext from "@/contexts/SocketContext";
@@ -31,6 +32,7 @@ import { capitalize, IconButton } from "@mui/material";
 import { Box, Button, Grid, Modal, Typography } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const SIZE_PAGE = 6;
 
@@ -40,7 +42,7 @@ const Page = () => {
 
   const { botId } = useParams();
   const [files, setFiles] = useState<FileBase[]>([]);
-
+  const userPack = useSelector((state: RootState) => getUserPack(state));
   // State filter and pagination
   const [searchValue, setSearchValue] = useState("");
   const [filter, setFilter] = useState<FilterType>({
@@ -106,6 +108,14 @@ const Page = () => {
       return file.size ? file.size + accumulator : accumulator;
     }, 0);
 
+    if (
+      userPack?.pack &&
+      fileCapacity + totalSize > userPack?.pack?.capacity_bot
+    ) {
+      showAlert("Dữ liệu không đủ", "warning");
+      return;
+    }
+
     try {
       const req = selectedOldFiles.map((file) => file._id);
       await botApi.addFiles(botId as string, req);
@@ -134,6 +144,14 @@ const Page = () => {
     const totalSize = uploadingFiles.reduce((accumulator, file) => {
       return file.size ? file.size + accumulator : accumulator;
     }, 0);
+
+    if (
+      userPack?.pack &&
+      fileCapacity + totalSize > userPack?.pack?.capacity_bot
+    ) {
+      showAlert("Dữ liệu không đủ", "warning");
+      return;
+    }
 
     const formData = new FormData();
     uploadingFiles.forEach((file) => {
@@ -172,7 +190,14 @@ const Page = () => {
     try {
       const res = await fileApi.download(file._id as string);
       const fileURL = URL.createObjectURL(
-        new Blob([res as any], { type: "application/pdf" })
+        new Blob([res as any], {
+          type:
+            file.extension === "docx"
+              ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+              : file.extension === "doc"
+              ? "application/msword"
+              : "application/pdf",
+        })
       );
 
       const link = document.createElement("a");
@@ -294,6 +319,11 @@ const Page = () => {
             startIcon={<FileCopyOutlined />}
             variant="outlined"
             sx={{ marginRight: "8px" }}
+            disabled={
+              !userPack?.pack ||
+              fileCapacity >= userPack?.pack.capacity_file ||
+              fileCapacity >= userPack?.pack.capacity_bot
+            }
           >
             Thêm dữ liệu
           </Button>

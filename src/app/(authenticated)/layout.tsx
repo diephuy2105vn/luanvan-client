@@ -74,5 +74,14 @@ export default function RootLayout({
     }
   }, [socket]);
 
+  useEffect(() => {
+    const fetchPackage = async () => {
+      const res = await userApi.getPackageInfo();
+      dispatch(setUserPack(res as UserPackageInfo));
+    };
+
+    fetchPackage();
+  }, [user]);
+
   return <DefaultLayout>{children}</DefaultLayout>;
 }

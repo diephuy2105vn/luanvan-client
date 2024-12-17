@@ -143,6 +143,11 @@ const ChatBotFrame = ({
       return;
     }
     try {
+      console.log(selectedChatHistory);
+      socket.emit("join_chat", {
+        bot_id: bot._id,
+        chat_history_id: selectedChatHistory._id,
+      });
       socket.emit("send_message", { message: newQuestion });
       const newMessage: ChatMessageType = {
         chat_history_id: selectedChatHistory._id,
@@ -228,6 +233,7 @@ const ChatBotFrame = ({
       socket?.emit("leave_chat");
     };
     handleJoinChat();
+
     return () => {
       handleLeaveChat();
       previousChatHistory.current = selectedChatHistory;
@@ -404,36 +410,29 @@ const ChatBotFrame = ({
               }}
             >
               {chatHistories.map((chat) => (
-                <Tooltip
+                <ListItem
                   key={chat._id}
-                  title={chat.disabled ? "Trò chuyện đang được sử dụng" : ""}
-                  placement="top-start"
+                  sx={{
+                    padding: 0,
+                    "& + &": {
+                      borderTop: "1px solid #ccc",
+                    },
+                  }}
                 >
-                  <ListItem
-                    key={chat._id}
+                  <ListItemButton
+                    onClick={() => handleClickChatHistory(chat)}
                     sx={{
-                      padding: 0,
-                      "& + &": {
-                        borderTop: "1px solid #ccc",
-                      },
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
                     }}
                   >
-                    <ListItemButton
-                      disabled={chat.disabled}
-                      onClick={() => handleClickChatHistory(chat)}
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      <Typography fontWeight="500">Trò chuyện mới</Typography>
-                      <Typography fontSize={12}>
-                        {formatTime(chat.created_at)}
-                      </Typography>
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
+                    <Typography fontWeight="500">Trò chuyện mới</Typography>
+                    <Typography fontSize={12}>
+                      {formatTime(chat.created_at)}
+                    </Typography>
+                  </ListItemButton>
+                </ListItem>
               ))}
             </List>
           ) : (

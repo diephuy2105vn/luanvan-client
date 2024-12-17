@@ -1,7 +1,8 @@
 "use client";
 
 import botApi from "@/api/botApi";
-import { getUser } from "@/config/redux/userReducer";
+import { RootState } from "@/config/redux/store";
+import { getUser, getUserPack } from "@/config/redux/userReducer";
 import { useAppSelector } from "@/hooks/common";
 import useBreakpoint from "@/hooks/useBreakpoins";
 import { BotBase, PermissionEnum } from "@/types/bot";
@@ -17,6 +18,7 @@ import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 const Layout = ({ children }: OnlyChildrenProps) => {
   const logedUser = useAppSelector((state) => getUser(state));
@@ -65,17 +67,17 @@ const Layout = ({ children }: OnlyChildrenProps) => {
           href: `/management/${botId}`,
           icon: Info,
         },
-        hasReadFilePermission() && {
+        logedUser?._id === bot?.owner && {
           label: "Dữ liệu",
           href: `/management/${botId}/file`,
           icon: Storage,
         },
-        hasReadUserPermission() && {
+        logedUser?._id === bot?.owner && {
           label: "Người dùng",
           href: `/management/${botId}/user`,
           icon: People,
         },
-        {
+        logedUser?._id === bot?.owner && {
           label: "Tích hợp",
           href: `/management/${botId}/integration`,
           icon: IntegrationInstructionsSharp,

@@ -5,6 +5,8 @@ import BotCard from "@/components/card/BotCard";
 import { MenuItemProps } from "@/components/common/Menu";
 import CustomModal from "@/components/common/Modal";
 import CustomSearch from "@/components/common/Search";
+import { RootState } from "@/config/redux/store";
+import { getUser, getUserPack } from "@/config/redux/userReducer";
 import AlertContext from "@/contexts/AlertContext";
 import useBreakpoint from "@/hooks/useBreakpoins";
 import useSetValueTimeout from "@/hooks/useSetValueTimeOut";
@@ -13,7 +15,8 @@ import { DeleteOutline, ExpandMore, InfoOutlined } from "@mui/icons-material";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 const SIZE_PAGE = 6;
 
@@ -28,7 +31,8 @@ const Page = () => {
   const [totalPage, setTotalPage] = useState(1);
   const [deletingBot, setDeletingBot] = useState<BotBase | null>(null);
   const changedSearchValue = useSetValueTimeout(searchValue, 1000);
-
+  const userPack = useSelector((state: RootState) => getUserPack(state));
+  const logedUser = useSelector((status: RootState) => getUser(status));
   const fetchBots = async () => {
     const res = await botApi.getAll({
       size_page: SIZE_PAGE,
@@ -52,7 +56,13 @@ const Page = () => {
       if (!deletingBot || !deletingBot._id) {
         throw new Error();
       }
-      await botApi.delete(deletingBot._id);
+
+      if (deletingBot.owner === logedUser._id) {
+        await botApi.delete(deletingBot._id);
+      } else {
+        await botApi.deleteUserPermission(deletingBot._id, logedUser._id);
+      }
+
       setBots((pre) => pre.filter((b) => b._id !== deletingBot._id));
       showAlert("Xóa trợ lý AI thành công", "success");
       handleToggleModalDeleteBot();
@@ -62,8 +72,8 @@ const Page = () => {
     }
   };
 
-  const menuBot: MenuItemProps[] = useMemo(
-    () => [
+  const menuBot = useCallback(
+    (bot: BotBase) => [
       {
         key: "1",
         label: "Chi tiết",
@@ -75,7 +85,7 @@ const Page = () => {
       },
       {
         key: "2",
-        label: "Xóa",
+        label: bot.owner === logedUser?._id ? "Xóa" : "Rời khỏi",
         action: (metaData: BotBase) => {
           handleToggleModalDeleteBot(metaData);
         },
@@ -140,6 +150,7 @@ const Page = () => {
             Trợ lý AI của tôi
           </Typography>
           <Button
+            disabled={!userPack || bots.length >= userPack?.pack?.numBot}
             component={Link}
             href="/management/create_bot"
             size={breakpoint.sm ? "large" : "medium"}
@@ -153,7 +164,7 @@ const Page = () => {
           {bots?.map((bot) => (
             <Grid item xs={6} md={4} key={bot._id}>
               <Link href={`/management/${bot._id}`}>
-                <BotCard bot={bot} showMenu={true} menuItems={menuBot} />
+                <BotCard bot={bot} showMenu={true} menuItems={menuBot(bot)} />
               </Link>
             </Grid>
           ))}
