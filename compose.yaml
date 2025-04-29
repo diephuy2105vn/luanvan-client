@@ -14,9 +14,12 @@ services:
       dockerfile: ./Dockerfile
 
     image: code-chat-ui:latest
+    env_file:
+      - .env
     environment:
       NODE_ENV: production
       SERVER_HOST: 0.0.0.0
+    restart: always
     ports:
       - 3000:3000
 # The commented out section below is an example of how to define a PostgreSQL
