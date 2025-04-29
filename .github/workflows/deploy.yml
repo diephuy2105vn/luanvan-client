@@ -22,7 +22,7 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i my-key.pem tuanhuy2105vn@${{ secrets.GCE_HOST }} << 'EOF'
             if [ ! -d "/home/tuanhuy2105vn/code-chat-ui" ]; then
-              git clone https://github.com/diephuy2105vn/luanvan-server.git /home/tuanhuy2105vn/code-chat-ui
+              git clone https://github.com/diephuy2105vn/luanvan-client.git /home/tuanhuy2105vn/code-chat-ui
             fi
             cd /home/tuanhuy2105vn/code-chat-ui
             git pull origin master

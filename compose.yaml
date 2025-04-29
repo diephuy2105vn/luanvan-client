@@ -12,7 +12,7 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
-      target: prod
+
     image: code-chat-ui:latest
     environment:
       NODE_ENV: production
