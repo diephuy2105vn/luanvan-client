@@ -15,9 +15,7 @@ export default function RootLayout({
 
   useEffect(() => {
     if (logedUser?._id) {
-      logedUser.role === "admin"
-        ? router.push("/admin/chart")
-        : router.push("/");
+      router.push("/");
     }
   }, [logedUser?._id]);
   return <div>{children}</div>;

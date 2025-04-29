@@ -2,7 +2,7 @@ import axiosClient, { ApiResponse } from "@/config/axios";
 
 const packApi = {
   getAll(params?: Record<string, any>, config?: object) {
-    const url = "/api/package/";
+    const url = "/package/";
     for (const key in params) {
       if (params[key] === "") {
         delete params[key];
@@ -12,7 +12,7 @@ const packApi = {
   },
 
   create(req: object, config?: object) {
-    const url = "/api/package/";
+    const url = "/package/";
     return axiosClient.post(url, req, {
       ...config,
       headers: {
@@ -22,7 +22,7 @@ const packApi = {
   },
 
   update(package_id: string, req: object, config?: object) {
-    const url = `/api/package/${package_id}`;
+    const url = `/package/${package_id}`;
     return axiosClient.put(url, req, {
       ...config,
       headers: {
@@ -31,7 +31,7 @@ const packApi = {
     }) as ApiResponse;
   },
   delete(package_id: string, req: object, config?: object) {
-    const url = `/api/package/${package_id}`;
+    const url = `/package/${package_id}`;
     return axiosClient.delete(url) as ApiResponse;
   },
 };

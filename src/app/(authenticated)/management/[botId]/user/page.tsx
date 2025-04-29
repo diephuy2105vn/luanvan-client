@@ -2,13 +2,11 @@
 
 import botApi from "@/api/botApi";
 import userApi from "@/api/userApi";
-import Filter, { FilterType } from "@/components/common/Filter";
+import { FilterType } from "@/components/common/Filter";
 import { MenuItemProps } from "@/components/common/Menu";
 import CustomModal from "@/components/common/Modal";
 import CustomSearch from "@/components/common/Search";
 import UserPermissionTable from "@/components/table/UserPermissionTable";
-import { RootState } from "@/config/redux/store";
-import { getUserPack } from "@/config/redux/userReducer";
 import AlertContext from "@/contexts/AlertContext";
 import useSetValueTimeout from "@/hooks/useSetValueTimeOut";
 import {
@@ -19,12 +17,8 @@ import {
 } from "@/types/bot";
 import { UserBase } from "@/types/user";
 import {
-  AdminPanelSettingsOutlined,
-  ArrowDownward,
-  ArrowUpward,
   Close,
   DeleteOutline,
-  FilterAlt,
   Person,
   PersonAddOutlined,
 } from "@mui/icons-material";
@@ -48,7 +42,6 @@ import {
 } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
 const Page = () => {
   const { showAlert } = useContext(AlertContext);
 

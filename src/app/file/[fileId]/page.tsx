@@ -5,20 +5,21 @@ import fileApi from "@/api/fileApi";
 import PDFViewer from "@/components/viewer/pdf";
 import WordViewer from "@/components/viewer/word";
 import { Box, Container } from "@mui/material";
+import { FileDetail } from "@/types/file";
 
 const Page = () => {
   const { fileId } = useParams();
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState<FileDetail | null>(null);
   const [fileData, setFileData] = useState<Blob | null>(null);
 
   useEffect(() => {
     const fetchFile = async () => {
       try {
         const file = await fileApi.getById(fileId as string);
-        setFile(file);
+        setFile(file as FileDetail);
 
         const res = await fileApi.download(fileId as string);
-        const blob = new Blob([res], {
+        const blob = new Blob([res as BlobPart], {
           type:
             file.extension === "docx" || file.extension === "doc"
               ? "application/vnd.openxmlformats-officedocument.wordprocessingml.document"

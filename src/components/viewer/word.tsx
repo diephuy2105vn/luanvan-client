@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { renderAsync } from "docx-preview";
 import React, { useEffect } from "react";
 
-const WordViewer = ({ fileData }) => {
+const WordViewer = ({ fileData }: { fileData: Blob | null }) => {
   // console.log("Hello wword");
   useEffect(() => {
     // Ensure that the container exists

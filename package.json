@@ -16,6 +16,7 @@
         "@mui/material": "^5.16.5",
         "@mui/material-nextjs": "^5.16.4",
         "@mui/x-date-pickers": "^7.18.0",
+        "@next/bundle-analyzer": "^15.3.1",
         "@reduxjs/toolkit": "^2.2.7",
         "@types/react-dropzone": "^5.1.0",
         "apexcharts": "^3.54.0",

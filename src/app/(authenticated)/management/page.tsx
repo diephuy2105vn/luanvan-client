@@ -15,7 +15,7 @@ import { DeleteOutline, ExpandMore, InfoOutlined } from "@mui/icons-material";
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 const SIZE_PAGE = 6;
@@ -53,6 +53,9 @@ const Page = () => {
 
   const handleDeleteBot = async () => {
     try {
+      if (!logedUser) {
+        return;
+      }
       if (!deletingBot || !deletingBot._id) {
         throw new Error();
       }
@@ -150,7 +153,7 @@ const Page = () => {
             Trợ lý AI của tôi
           </Typography>
           <Button
-            disabled={!userPack || bots.length >= userPack?.pack?.numBot}
+            // disabled={!userPack || bots.length >= userPack?.pack?.numBot}
             component={Link}
             href="/management/create_bot"
             size={breakpoint.sm ? "large" : "medium"}
@@ -164,7 +167,11 @@ const Page = () => {
           {bots?.map((bot) => (
             <Grid item xs={6} md={4} key={bot._id}>
               <Link href={`/management/${bot._id}`}>
-                <BotCard bot={bot} showMenu={true} menuItems={menuBot(bot)} />
+                <BotCard
+                  bot={bot}
+                  showMenu={true}
+                  menuItems={menuBot(bot) as MenuItemProps[]}
+                />
               </Link>
             </Grid>
           ))}

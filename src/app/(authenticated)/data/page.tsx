@@ -1,10 +1,7 @@
 "use client";
 
-import botApi from "@/api/botApi";
 import fileApi from "@/api/fileApi";
-import packApi from "@/api/packApi";
-import userApi from "@/api/userApi";
-import Filter, { FilterType } from "@/components/common/Filter";
+import { FilterType } from "@/components/common/Filter";
 import { MenuItemProps } from "@/components/common/Menu";
 import CustomModal from "@/components/common/Modal";
 import CustomSearch from "@/components/common/Search";
@@ -14,19 +11,14 @@ import { RootState } from "@/config/redux/store";
 import { getUserPack } from "@/config/redux/userReducer";
 import AlertContext from "@/contexts/AlertContext";
 import SocketContext from "@/contexts/SocketContext";
-import { useAppSelector } from "@/hooks/common";
 import useSetValueTimeout from "@/hooks/useSetValueTimeOut";
 import { FileBase } from "@/types/file";
-import { PackageType } from "@/types/package";
 import {
-  ArrowDownward,
-  ArrowUpward,
   DeleteOutline,
   Download,
   FileUploadOutlined,
 } from "@mui/icons-material";
-import { Box, Button, Grid, Modal, Typography } from "@mui/material";
-import { useParams } from "next/navigation";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -228,9 +220,9 @@ const Page = () => {
             onClick={() => handleToggleModal()}
             startIcon={<FileUploadOutlined />}
             variant="outlined"
-            disabled={
-              !userPack?.pack || fileCapacity > userPack?.pack.capacity_file
-            }
+            // disabled={
+            //   !userPack?.pack || fileCapacity > userPack?.pack.capacity_file
+            // }
           >
             Thêm Dữ Liệu
           </Button>

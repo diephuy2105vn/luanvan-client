@@ -6,7 +6,6 @@ import ChatBotList from "@/components/list/ChatBotList";
 import useBreakpoint from "@/hooks/useBreakpoins";
 import { BotBase } from "@/types/bot";
 import { Box, Button, Container, Drawer, Typography } from "@mui/material";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Page = () => {

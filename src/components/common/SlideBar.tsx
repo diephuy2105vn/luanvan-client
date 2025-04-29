@@ -249,6 +249,9 @@ const Sidebar = ({ open, setOpen, handleOpen, handleClose }: SidebarProps) => {
           ]
             .filter((item) => item)
             .map((item) => {
+              if (!item) {
+                return <></>;
+              }
               return (
                 <ListItem
                   key={item.text}

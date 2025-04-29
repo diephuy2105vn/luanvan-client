@@ -2,11 +2,7 @@
 
 import useBreakpoint from "@/hooks/useBreakpoins";
 import { OnlyChildrenProps } from "@/types/common";
-import {
-  DeleteRounded,
-  EditRounded,
-  InsertDriveFile,
-} from "@mui/icons-material";
+import { DeleteRounded, InsertDriveFile } from "@mui/icons-material";
 import { Container, Tab, Tabs, Typography } from "@mui/material";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

@@ -2,16 +2,13 @@
 
 import botApi from "@/api/botApi";
 import FormBot from "@/components/form/FormBot";
-import { RootState } from "@/config/redux/store";
-import { getUser, getUserPack } from "@/config/redux/userReducer";
+import { getUser } from "@/config/redux/userReducer";
 import AlertContext from "@/contexts/AlertContext";
 import { useAppSelector } from "@/hooks/common";
-import useBreakpoint from "@/hooks/useBreakpoins";
-import { BotBase, BotCreate, defaultBotCreate } from "@/types/bot";
+import { BotBase, BotCreate } from "@/types/bot";
 import { Box, Button } from "@mui/material";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
 const Page = () => {
   const logedUser = useAppSelector((state) => getUser(state));

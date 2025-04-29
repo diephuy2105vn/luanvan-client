@@ -28,17 +28,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <StoreProvider>
-              <SocketProvider>
-                <NotificationProvider>
-                  <AlertProvider>{children}</AlertProvider>
-                </NotificationProvider>
-              </SocketProvider>
-            </StoreProvider>
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+        <ThemeProvider theme={theme}>
+          <StoreProvider>
+            <SocketProvider>
+              <NotificationProvider>
+                <AlertProvider>{children}</AlertProvider>
+              </NotificationProvider>
+            </SocketProvider>
+          </StoreProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -2,7 +2,7 @@ import axiosClient, { ApiResponse } from "@/config/axios";
 
 const userApi = {
   login(req: object, config?: object) {
-    const url = "/api/user/login";
+    const url = "/user/login";
     const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
     };
@@ -14,22 +14,22 @@ const userApi = {
   },
 
   register(req: object, config?: object) {
-    const url = "/api/user/register";
+    const url = "/user/register";
     return axiosClient.post(url, req, config) as ApiResponse;
   },
 
   refresh(config?: object) {
-    const url = "/api/user/refresh";
+    const url = "/user/refresh";
     return axiosClient.get(url, config) as ApiResponse;
   },
   getAll(params: object, config?: object) {
-    const url = "/api/user/";
+    const url = "/user/";
     return axiosClient.get(url, { params, ...config }) as ApiResponse;
   },
 
   getAvatar(user_id: string, timestamp?: number, config?: object) {
     const timestampNew = new Date().getTime();
-    const url = `/api/user/${user_id}/avatar?reset_cache=${timestampNew}`;
+    const url = `/user/${user_id}/avatar?reset_cache=${timestampNew}`;
 
     return axiosClient.get(url, {
       ...config,
@@ -38,12 +38,12 @@ const userApi = {
   },
 
   update: (req: object, config?: object) => {
-    const url = `/api/user/`;
+    const url = `/user/`;
     return axiosClient.put(url, req, config) as ApiResponse;
   },
 
   uploadAvatar(req: object, config?: object) {
-    const url = `/api/user/upload_avatar`;
+    const url = `/user/upload_avatar`;
     return axiosClient.put(url, req, {
       ...config,
       headers: {

@@ -1,7 +1,7 @@
 "use client";
 
 import fileApi from "@/api/fileApi";
-import Filter, { FilterType } from "@/components/common/Filter";
+import { FilterType } from "@/components/common/Filter";
 import { MenuItemProps } from "@/components/common/Menu";
 import CustomModal from "@/components/common/Modal";
 import CustomSearch from "@/components/common/Search";
@@ -9,12 +9,7 @@ import FileTable from "@/components/table/FileTable";
 import AlertContext from "@/contexts/AlertContext";
 import SocketContext from "@/contexts/SocketContext";
 import { FileBase } from "@/types/file";
-import {
-  ArrowDownward,
-  ArrowUpward,
-  DeleteOutline,
-  RestorePageOutlined,
-} from "@mui/icons-material";
+import { DeleteOutline, RestorePageOutlined } from "@mui/icons-material";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 

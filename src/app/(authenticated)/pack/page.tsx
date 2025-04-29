@@ -42,7 +42,7 @@ const Page = () => {
     setSelectedOrder(pack);
   };
 
-  const handleCloseDialog = (pack: PackageType) => {
+  const handleCloseDialog = () => {
     setDialogOpen(false);
     setSelectedOrder(null);
   };

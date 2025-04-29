@@ -11,7 +11,7 @@ const StyledPage = styled(Page)(({ theme }) => ({
   },
 }));
 
-const PDFViewer = ({ fileData }: { fileData: string | null }) => {
+const PDFViewer = ({ fileData }: { fileData: Blob | null }) => {
   const [numPages, setNumPages] = useState(0);
   return (
     <Box
