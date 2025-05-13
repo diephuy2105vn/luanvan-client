@@ -1,13 +1,13 @@
-const BASE_URL = "http://localhost:3000";
-const SERVER_URL = "http://localhost:8000/api";
+const BASE_URL = "https://codechat.dthhosting.uk";
+const SERVER_URL = "https://codechat.dthhosting.uk/api";
 
 let socket = null;
 
 // Function to create and insert the AI Chat frame
 function createAIChatContainer(bot, token, botToken) {
-	const aiChatContainer = document.createElement("div");
-	aiChatContainer.id = "codechat";
-	aiChatContainer.style.cssText = `
+  const aiChatContainer = document.createElement("div");
+  aiChatContainer.id = "codechat";
+  aiChatContainer.style.cssText = `
         font-family: Roboto, 'Helvetica Neue', sans-serif;
         box-sizing: border-box;
         position: fixed;
@@ -18,10 +18,10 @@ function createAIChatContainer(bot, token, botToken) {
         align-items: flex-end;
     `;
 
-	// Create the AI Chat frame
-	const aiChatFrame = document.createElement("div");
-	aiChatFrame.id = "codechat-frame";
-	aiChatFrame.style.cssText = `
+  // Create the AI Chat frame
+  const aiChatFrame = document.createElement("div");
+  aiChatFrame.id = "codechat-frame";
+  aiChatFrame.style.cssText = `
         height: 440px;
         width: 440px;
         max-width: 80%;
@@ -34,14 +34,14 @@ function createAIChatContainer(bot, token, botToken) {
         flex-direction: column;
         background-color: white;
     `;
-	aiChatFrame.innerHTML = `
+  aiChatFrame.innerHTML = `
         <div class="codechat-frame_header" style="display: flex; align-items: center; justify-content: space-between; padding: 4px 12px 8px; height: 40px; border-bottom: 1px solid #ddd;">
             <div style="display: flex; gap: 10px; align-items: center;">
                 <img src="${
-					bot.avatar_source
-						? SERVER_URL + "/bot/" + bot._id + "/avatar"
-						: BASE_URL + "/avatar/bot_avatar.jpg"
-				}" style="height: 36px; width: 36px; border-radius: 50%" alt="..." />
+                  bot.avatar_source
+                    ? SERVER_URL + "/bot/" + bot._id + "/avatar"
+                    : BASE_URL + "/avatar/bot_avatar.jpg"
+                }" style="height: 36px; width: 36px; border-radius: 50%" alt="..." />
                 <p style="font-size: 14px; font-weight: 500">${bot.name}</p>
             </div>
             <div>
@@ -75,13 +75,13 @@ function createAIChatContainer(bot, token, botToken) {
             </div>
         </div>
     `;
-	aiChatFrame.style.display = "none"; // Initially hidden
+  aiChatFrame.style.display = "none"; // Initially hidden
 
-	// Create the AI Chat button
-	const button = document.createElement("button");
-	button.id = "codechat-button";
-	button.textContent = "Code Chat";
-	button.style.cssText = `
+  // Create the AI Chat button
+  const button = document.createElement("button");
+  button.id = "codechat-button";
+  button.textContent = "Code Chat";
+  button.style.cssText = `
     border: none;
     display: block;
     background: linear-gradient(135deg, #8e4e65, #de741c);
@@ -91,116 +91,113 @@ function createAIChatContainer(bot, token, botToken) {
     border-radius: 40px;
     cursor: pointer;
   `;
-	aiChatContainer.appendChild(aiChatFrame);
-	aiChatContainer.appendChild(button);
-	document.body.appendChild(aiChatContainer);
+  aiChatContainer.appendChild(aiChatFrame);
+  aiChatContainer.appendChild(button);
+  document.body.appendChild(aiChatContainer);
 
-	const sendButton = document.getElementById("codechat-send-button");
-	const inputField = document.getElementById("codechat-input");
-	const refreshButton = document.getElementById("codechat-refresh-button");
-	const messageContainer = aiChatFrame.querySelector(
-		".codechat-frame_container"
-	);
+  const sendButton = document.getElementById("codechat-send-button");
+  const inputField = document.getElementById("codechat-input");
+  const refreshButton = document.getElementById("codechat-refresh-button");
+  const messageContainer = aiChatFrame.querySelector(
+    ".codechat-frame_container"
+  );
 
-	// Event listener to send message
-	sendButton.addEventListener("click", function () {
-		const message = inputField.value;
-		if (message.trim() !== "" && socket) {
-			addMessage(messageContainer, message, "right");
-			addLoading(messageContainer);
-			socket.emit("send_message", { message: message });
-			inputField.value = "";
-		}
-	});
+  // Event listener to send message
+  sendButton.addEventListener("click", function () {
+    const message = inputField.value;
+    if (message.trim() !== "" && socket) {
+      addMessage(messageContainer, message, "right");
+      addLoading(messageContainer);
+      socket.emit("send_message", { message: message });
+      inputField.value = "";
+    }
+  });
 
-	refreshButton.addEventListener("click", function () {
-		messageContainer.innerHTML = "";
-	});
+  refreshButton.addEventListener("click", function () {
+    messageContainer.innerHTML = "";
+  });
 
-	// Add enter key event to send message
-	inputField.addEventListener("keypress", function (event) {
-		if (event.key === "Enter") {
-			sendButton.click();
-		}
-	});
+  // Add enter key event to send message
+  inputField.addEventListener("keypress", function (event) {
+    if (event.key === "Enter") {
+      sendButton.click();
+    }
+  });
 
-	button.addEventListener("click", function () {
-		const chatFrame = document.getElementById("codechat-frame");
-		if (
-			chatFrame.style.display === "none" ||
-			chatFrame.style.display === ""
-		) {
-			chatFrame.style.display = "flex";
-		} else {
-			chatFrame.style.display = "none";
-		}
-	});
+  button.addEventListener("click", function () {
+    const chatFrame = document.getElementById("codechat-frame");
+    if (chatFrame.style.display === "none" || chatFrame.style.display === "") {
+      chatFrame.style.display = "flex";
+    } else {
+      chatFrame.style.display = "none";
+    }
+  });
 }
 
 async function fetchBotById(token, botToken) {
-	const res = await fetch(`${SERVER_URL}/bot/${botToken}`, {
-		headers: { Authorization: `Bearer ${token}` },
-	});
-	const data = await res.json();
-	return data;
+  const res = await fetch(`${SERVER_URL}/bot/${botToken}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  return data;
 }
 
 async function joinChat(token, botToken) {
-	const res = await fetch(
-		`${SERVER_URL}/chat_history/join_chat_bot/${botToken}`,
-		{
-			headers: { Authorization: `Bearer ${token}` },
-		}
-	);
-	const data = await res.json();
-	socket.emit("join_chat", {
-		bot_id: botToken,
-		chat_history_id: data._id,
-	});
-	return data;
+  const res = await fetch(
+    `${SERVER_URL}/chat_history/join_chat_bot/${botToken}`,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  const data = await res.json();
+  socket.emit("join_chat", {
+    bot_id: botToken,
+    chat_history_id: data._id,
+  });
+  return data;
 }
 
 function connectSocketIO(token, botToken) {
-	socket = io(`ws://localhost:8000/`, {
-		transports: ["websocket"],
-		query: {
-			token: token,
-		},
-		path: "/ws",
-	});
+  socket = io(`ws://localhost:8000/`, {
+    transports: ["websocket"],
+    query: {
+      token: token,
+    },
+    path: "/ws",
+  });
 
-	socket.on("connect", () => {
-		joinChat(token, botToken);
-	});
+  socket.on("connect", () => {
+    joinChat(token, botToken);
+  });
 
-	socket.on("message", (data) => {
-		const messageContainer = document.querySelector(
-			".codechat-frame_container"
-		);
+  socket.on("message", (data) => {
+    const messageContainer = document.querySelector(
+      ".codechat-frame_container"
+    );
 
-		deleteLoading(messageContainer);
-		addMessage(messageContainer, data.message.answer, "left");
-	});
+    deleteLoading(messageContainer);
+    addMessage(messageContainer, data.message.answer, "left");
+  });
 
-	socket.on("disconnect", () => {
-		console.log("Disconnected from the server");
-	});
+  socket.on("disconnect", () => {
+    console.log("Disconnected from the server");
+  });
 
-	socket.on("error", (error) => {
-		console.error("Socket.IO error:", error);
-	});
+  socket.on("error", (error) => {
+    console.error("Socket.IO error:", error);
+  });
 }
 
 function disconnectSocketIO() {
-	if (socket) {
-		socket.disconnect();
-		socket = null;
-	}
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
 }
 
 function addMessage(container, message, position) {
-	const messageElement = document.createElement("div");
-	messageElement.style.cssText = `
+  const messageElement = document.createElement("div");
+  messageElement.style.cssText = `
         margin-bottom: 10px;
         padding: 10px;
         min-width: 80px;
@@ -208,21 +205,21 @@ function addMessage(container, message, position) {
         word-break: break-word;
         font-size: 14px;
         ${
-			position === "right"
-				? "background-color: rgba(222, 116, 28, 0.2); align-self: flex-end; align-self: flex-end; border-radius: 16px 16px 4px 16px"
-				: "background-color: rgba(142, 78, 101, 0.2); align-self: flex-start;  border-radius: 16px 16px 16px 4px"
-		}`;
-	messageElement.textContent = message;
-	container.appendChild(messageElement);
-	container.scrollTop = container.scrollHeight;
+          position === "right"
+            ? "background-color: rgba(222, 116, 28, 0.2); align-self: flex-end; align-self: flex-end; border-radius: 16px 16px 4px 16px"
+            : "background-color: rgba(142, 78, 101, 0.2); align-self: flex-start;  border-radius: 16px 16px 16px 4px"
+        }`;
+  messageElement.textContent = message;
+  container.appendChild(messageElement);
+  container.scrollTop = container.scrollHeight;
 }
 
 // Add status loading
 function addLoading(container) {
-	const loadingElement = document.createElement("div");
+  const loadingElement = document.createElement("div");
 
-	loadingElement.id = "codechat-message_loading";
-	loadingElement.style.cssText = `
+  loadingElement.id = "codechat-message_loading";
+  loadingElement.style.cssText = `
     padding: 16px 0;
     width: 100%;
     display: flex;
@@ -231,7 +228,7 @@ function addLoading(container) {
     margin-top: 4px;
   `;
 
-	loadingElement.innerHTML = `
+  loadingElement.innerHTML = `
     <span
       style="
         opacity: 0;
@@ -263,20 +260,20 @@ function addLoading(container) {
         animation-delay: 1s;">
     </span>`;
 
-	container.appendChild(loadingElement);
-	container.scrollTop = container.scrollHeight;
+  container.appendChild(loadingElement);
+  container.scrollTop = container.scrollHeight;
 }
 
 function deleteLoading() {
-	const loadingElement = document.getElementById("codechat-message_loading");
-	if (loadingElement) {
-		loadingElement.remove();
-	}
+  const loadingElement = document.getElementById("codechat-message_loading");
+  if (loadingElement) {
+    loadingElement.remove();
+  }
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-	const styleElement = document.createElement("style");
-	const keyframes = `@keyframes fadeInOut_custom {
+  const styleElement = document.createElement("style");
+  const keyframes = `@keyframes fadeInOut_custom {
     0%,
     100% {
       opacity: 0;
@@ -286,21 +283,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }`;
 
-	styleElement.appendChild(document.createTextNode(keyframes));
-	document.head.appendChild(styleElement);
+  styleElement.appendChild(document.createTextNode(keyframes));
+  document.head.appendChild(styleElement);
 
-	const scriptElement = document.getElementById("codechat-script");
+  const scriptElement = document.getElementById("codechat-script");
 
-	if (scriptElement) {
-		//Lây dữ liệu từ thẻ script
-		const token = scriptElement.getAttribute("token");
-		const botToken = scriptElement.getAttribute("botToken");
+  if (scriptElement) {
+    //Lây dữ liệu từ thẻ script
+    const token = scriptElement.getAttribute("token");
+    const botToken = scriptElement.getAttribute("botToken");
 
-		//Lấy bot
-		const bot = await fetchBotById(token, botToken);
+    //Lấy bot
+    const bot = await fetchBotById(token, botToken);
 
-		//Connect SocketIO
-		connectSocketIO(token, botToken);
-		createAIChatContainer(bot, token, botToken);
-	}
+    //Connect SocketIO
+    connectSocketIO(token, botToken);
+    createAIChatContainer(bot, token, botToken);
+  }
 });

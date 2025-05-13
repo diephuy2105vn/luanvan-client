@@ -4,13 +4,13 @@ services:
       context: .
       dockerfile: ./Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL} # Truyền NEXT_PUBLIC_API_URL vào build
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     image: code-chat-ui:latest
     env_file:
       - .env
     environment:
       SERVER_HOST: 0.0.0.0
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL} # Đảm bảo đã truyền từ .env vào runtime
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     restart: always
     ports:
       - 3000:3000
