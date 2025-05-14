@@ -1,19 +1,24 @@
 "use client";
+import botApi from "@/api/botApi";
+import notificationApi from "@/api/notificationApi";
+import Logo from "@/assets/Logo.png";
+import { getUser, setUser } from "@/config/redux/userReducer";
+import NotificationContext from "@/contexts/NotificationContext";
+import { useAppDispatch, useAppSelector } from "@/hooks/common";
+import { NotificationBase } from "@/types/notification";
+import { deleteCookie } from "@/utils/cookie";
 import {
   AdminPanelSettings,
   ChevronLeft,
   ChevronRight,
-  Mail,
-  MedicalServices,
-  MoreVert,
-  MoveToInbox,
-  NotificationImportant,
   Notifications,
   ShoppingCart,
   SmartToy,
-  ToysOutlined,
-  Widgets,
 } from "@mui/icons-material";
+import ChatIcon from "@mui/icons-material/Chat";
+import DataUsageIcon from "@mui/icons-material/DataUsage";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import HomeIcon from "@mui/icons-material/Home";
 import {
   Avatar,
   Badge,
@@ -31,6 +36,9 @@ import {
   Typography,
 } from "@mui/material";
 import { CSSObject, styled, Theme } from "@mui/material/styles";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Dispatch,
   SetStateAction,
@@ -38,24 +46,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import Logo from "@/assets/Logo.png";
-import Image from "next/image";
-import HomeIcon from "@mui/icons-material/Home";
-import ChatIcon from "@mui/icons-material/Chat";
-import AssistantIcon from "@mui/icons-material/Assistant";
-import DataUsageIcon from "@mui/icons-material/DataUsage";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import NotificationContext from "@/contexts/NotificationContext";
-import { NotificationBase } from "@/types/notification";
-import botApi from "@/api/botApi";
-import notificationApi from "@/api/notificationApi";
-import { useAppDispatch, useAppSelector } from "@/hooks/common";
-import { getUser, setUser } from "@/config/redux/userReducer";
-import { deleteCookie } from "@/utils/cookie";
-import { useSelector } from "react-redux";
 const drawerWidth = 240;
 const drawerHeaderHeight = 80;
 
@@ -236,11 +226,7 @@ const Sidebar = ({ open, setOpen, handleOpen, handleClose }: SidebarProps) => {
               href: "/data",
               icon: <DataUsageIcon />,
             },
-            {
-              text: "Gói dịch vụ",
-              href: "/pack",
-              icon: <ShoppingCart />,
-            },
+
             logedUser?.role === "admin" && {
               text: "Admin",
               href: "/admin/chart",
