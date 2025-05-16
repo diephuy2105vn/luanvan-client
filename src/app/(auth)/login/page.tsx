@@ -1,11 +1,11 @@
 "use client";
 
 import userApi from "@/api/userApi";
+import bannerImage from "@/assets/banner_image.png";
 import { setUser } from "@/config/redux/userReducer";
+import AlertContext from "@/contexts/AlertContext";
 import { useAppDispatch } from "@/hooks/common";
 import useBreakpoint from "@/hooks/useBreakpoins";
-import { BotBase, BotCreate, defaultBotCreate } from "@/types/bot";
-import bannerImage from "@/assets/banner_image.png";
 import { UserBase } from "@/types/user";
 import { setCookie } from "@/utils/cookie";
 import {
@@ -21,7 +21,6 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useContext, useState } from "react";
-import AlertContext from "@/contexts/AlertContext";
 
 const StyledFormLogin = styled("form")({
   display: "flex",
@@ -31,6 +30,7 @@ const StyledFormLogin = styled("form")({
 
 const Page = () => {
   const [account, setAccount] = useState({ username: "", password: "" });
+  const breakpoint = useBreakpoint();
   const dispatch = useAppDispatch();
   const { showAlert } = useContext(AlertContext);
   const handleSubmitForm = async (e: React.FormEvent) => {
@@ -50,6 +50,7 @@ const Page = () => {
     <Container
       sx={{
         height: "100vh",
+        maxHeight: "-webkit-fill-available",
       }}
       maxWidth={false}
     >
@@ -59,15 +60,17 @@ const Page = () => {
         justifyContent="space-between"
         sx={{ height: "100%" }}
       >
-        <Grid item xs={0} sm={4} md={5.5}>
-          <Box className="CustomBanner-thumbnail">
-            <Image
-              style={{ width: "100%", height: "100%" }}
-              src={bannerImage}
-              alt="Banner"
-            />
-          </Box>
-        </Grid>
+        {breakpoint.sm && (
+          <Grid item xs={0} sm={4} md={5.5}>
+            <Box className="CustomBanner-thumbnail">
+              <Image
+                style={{ width: "100%", height: "100%" }}
+                src={bannerImage}
+                alt="Banner"
+              />
+            </Box>
+          </Grid>
+        )}
         <Grid item xs={12} sm={8} md={4.5}>
           <Card sx={{ padding: "20px" }}>
             <StyledFormLogin onSubmit={(e) => handleSubmitForm(e)}>

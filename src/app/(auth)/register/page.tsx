@@ -44,7 +44,7 @@ const Page = () => {
     role: "user",
   });
   const router = useRouter();
-
+  const breakpoint = useBreakpoint();
   const handleSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -75,15 +75,17 @@ const Page = () => {
         justifyContent="space-between"
         sx={{ height: "100%" }}
       >
-        <Grid item xs={0} sm={4} md={5.5}>
-          <Box className="CustomBanner-thumbnail">
-            <Image
-              style={{ width: "100%", height: "100%" }}
-              src={bannerImage}
-              alt="Banner"
-            />
-          </Box>
-        </Grid>
+        {breakpoint.sm && (
+          <Grid item xs={0} sm={4} md={5.5}>
+            <Box className="CustomBanner-thumbnail">
+              <Image
+                style={{ width: "100%", height: "100%" }}
+                src={bannerImage}
+                alt="Banner"
+              />
+            </Box>
+          </Grid>
+        )}
         <Grid item xs={12} sm={8} md={4.5}>
           <Card sx={{ padding: "20px" }}>
             <StyledFormLogin onSubmit={handleSubmitForm}>
