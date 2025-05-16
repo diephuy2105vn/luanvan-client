@@ -1,17 +1,9 @@
 "use client";
 
-import BotCard from "@/components/card/BotCard";
-import Header from "@/components/common/Header";
-import CustomSearch from "@/components/common/Search";
-import FormBot from "@/components/form/FormBot";
+import userApi from "@/api/userApi";
+import bannerImage from "@/assets/banner_image.png";
+import AlertContext from "@/contexts/AlertContext";
 import useBreakpoint from "@/hooks/useBreakpoins";
-import { BotBase, BotCreate, defaultBotCreate } from "@/types/bot";
-import {
-  ArrowDownward,
-  ArrowDropDown,
-  Expand,
-  ExpandMore,
-} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -22,13 +14,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import Link from "next/link";
-import { useContext, useState } from "react";
 import Image from "next/image";
-import bannerImage from "@/assets/banner_image.png";
-import AlertContext from "@/contexts/AlertContext";
-import userApi from "@/api/userApi";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useContext, useState } from "react";
 
 const StyledFormLogin = styled("form")({
   display: "flex",

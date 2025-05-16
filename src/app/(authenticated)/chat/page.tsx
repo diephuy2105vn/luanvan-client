@@ -31,9 +31,10 @@ const Page = () => {
       <Box
         sx={{
           display: "flex",
-          height: breakpoint.md
+          height: breakpoint.sm
             ? "100vh"
             : `calc(100vh - ${HEADER_HEIGHT_SM}px)`,
+          maxHeight: "-webkit-fill-available",
         }}
       >
         {breakpoint.md && (

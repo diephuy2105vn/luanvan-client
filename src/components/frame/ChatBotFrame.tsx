@@ -43,6 +43,7 @@ import SocketContext from "@/contexts/SocketContext";
 import AlertContext from "@/contexts/AlertContext";
 import { ChatMessage as ChatMessageType } from "@/types/chat_message";
 import CustomModal from "../common/Modal";
+import { HEADER_HEIGHT_SM } from "../common/Header";
 const ChatBotFrame = ({
   bot,
   openDrawer = null,
@@ -56,6 +57,7 @@ const ChatBotFrame = ({
   showChatHistory?: boolean;
   token?: string | null;
 }) => {
+  const breakpoint = useBreakpoint();
   const { showAlert } = useContext(AlertContext);
   const { socket } = useContext(SocketContext);
 
@@ -244,7 +246,13 @@ const ChatBotFrame = ({
     ? getColorFromInitial(bot.name?.charAt(0))
     : undefined;
   return (
-    <Box sx={{ width: "100%", height: "100%" }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        maxHeight: "-webkit-fill-available",
+      }}
+    >
       <Box
         sx={{
           height: "80px",
