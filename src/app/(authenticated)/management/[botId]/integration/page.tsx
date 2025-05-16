@@ -115,7 +115,7 @@ const Page = () => {
                 >
                   {`<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 <script	id="codechat-script"
-	src="http://localhost:3000/codechat-script.js"\ntoken="${token}"
+	src="https://codechat.dthhosting.uk/codechat-script.js"\ntoken="${token}"
 	botToken="${botId}">
 </script>`}
                 </StyledTextArea>
@@ -172,7 +172,7 @@ const Page = () => {
 	scrolling="no"	loading="lazy"	
 	frameborder="0"	allowfullscreen="true"
 	style="width: 100%; border: none; height: 100%"
-	src="http://localhost:3000/integrate/${botId}?token=${token}"
+	src="https://codechat.dthhosting.uk/integrate/${botId}?token=${token}"
 	allow="clipboard-read; clipboard-write; autoplay; encrypted-media; fullscreen; display-capture">
 </iframe>`}
                 </StyledTextArea>
